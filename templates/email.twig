@@ -1,0 +1,21 @@
+<b>Hey there</b>,<br><br>
+
+It’s your friendly reminder application for food and todos.<br><br>
+
+Meal Options are gotten from Google sheet created by your Favorite.<br>
+<small>Make edits and update to your reminder from the <a href="https://docs.google.com/spreadsheets/d/{{ sheet }}/edit">Google Sheet</a></small><br>
+<br>
+For today you are to eat<br>
+<b>Breakfast:</b> {{ breakfast }}<br>
+<b>Lunch:</b> {{ lunch }}<br>
+<b>Dinner</b> {{ dinner }}
+
+<br><br>
+
+You also have the following todos to complete.
+<ul>
+    {% for todo in todos %}
+        <li>{{ todo }}</li>
+    {% endfor %}
+</ul>
+
