@@ -9,8 +9,8 @@ const Mail = require("../src/Mail");
 dotenv.config();
 
 let ReminderMail = new Mail()
-ReminderMail.from = process.env.MAIL_FROM ;
-for(let to of process.env.MAIL_TO.split(',')) {
+ReminderMail.from = process.env.MAIL_FROM;
+for (let to of process.env.MAIL_TO.split(',')) {
   ReminderMail.to = to;
 }
 ReminderMail.subject = 'Your Automated Reminder to Eat and Todos';
@@ -18,17 +18,18 @@ ReminderMail.template = 'templates/email.twig';
 
 const options = yargs
   .usage("Usage: -i <sheet>")
-  .option("i", { alias: "sheet", describe: "Google sheet source of truth", type: "string", demandOption: true })
+  .option("i", {alias: "sheet", describe: "Google sheet source of truth", type: "string", demandOption: true})
   .argv;
 
 const GoogleSheet = new Sheets(options.sheet);
 
 let foodSheet = null
 let todosSheet = null
+
 GoogleSheet.authenticate().then(() => {
   foodSheet = GoogleSheet.getSheet('Food')
   todosSheet = GoogleSheet.getSheet('Todos')
-  GoogleSheet.getRows(foodSheet).then((data) => {
+  GoogleSheet.getRows(foodSheet).then((foodData) => {
     const d = new Date();
     const n = d.getDay();
 
@@ -39,9 +40,9 @@ GoogleSheet.authenticate().then(() => {
       }
       ReminderMail = ReminderMail.with('sheet', options.sheet)
         .with('breakfast', options.sheet)
-        .with('breakfast', data[n].Breakfast)
-        .with('lunch', data[n].Lunch)
-        .with('dinner', data[n].Dinner)
+        .with('breakfast', foodData[n].Breakfast)
+        .with('lunch', foodData[n].Lunch)
+        .with('dinner', foodData[n].Dinner)
         .with('todos', todos)
         .send();
     })
